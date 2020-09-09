@@ -24,13 +24,19 @@ while running:
     #appliquer l'image de mon joueur
     screen.blit(game.player.image, game.player.rect)
 
+    #récuperer les projectiles du joueur
+    for projectile in game.player.all_projectiles:
+        projectile.move()
+
+    #appliquer l'ensemble des images de mon groupe de projectile
+    game.player.all_projectiles.draw(screen)
+
+
     #Verifier les touches droite ou gauche
     if game.pressed.get(pygame.K_RIGHT) and game.player.rect.x + game.player.rect.width < screen.get_width():
         game.player.move_right()
     elif game.pressed.get(pygame.K_LEFT) and game.player.rect.x > 0:
         game.player.move_left()
-
-    print(game.player.rect.x)
 
     #mettre a jour notre écran
     pygame.display.flip()
@@ -44,5 +50,10 @@ while running:
         #si un joueur lache une touche du clavier
         elif event.type == pygame.KEYDOWN:
             game.pressed[event.key] = True
+
+            #détecter si la touche espace est activé
+            if event.key == pygame.K_SPACE:
+                game.player.launch_projectile()
+
         elif event.type == pygame.KEYUP:
             game.pressed[event.key] = False
