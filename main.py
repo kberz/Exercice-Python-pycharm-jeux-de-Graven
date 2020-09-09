@@ -28,8 +28,15 @@ while running:
     for projectile in game.player.all_projectiles:
         projectile.move()
 
+    #récuperer les monstres de notre jeu
+    for monster in game.all_monsters:
+        monster.forward()
+
     #appliquer l'ensemble des images de mon groupe de projectile
     game.player.all_projectiles.draw(screen)
+
+    #appliquer l'ensemble des images de mon groupe de monstre
+    game.all_monsters.draw(screen)
 
 
     #Verifier les touches droite ou gauche
