@@ -13,7 +13,7 @@ class Monster(pygame.sprite.Sprite):
         self.image = pygame.image.load('assets/mummy.png')
         self.rect = self.image.get_rect()
         self.rect.x = 1000 + random.randint(0, 300)
-        self.rect.y = 426
+        self.rect.y = 500
         self.velocity = random.randint(1, 3)
 
     def damage(self, amount):

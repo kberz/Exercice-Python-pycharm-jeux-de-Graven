@@ -1,15 +1,28 @@
 import pygame
+import math
 from game import Game
 pygame.init()
 
 #Générer la fenetre de notre jeu
 
 pygame.display.set_caption("Comet fall Game")
-screen = pygame.display.set_mode((1080, 600))
+screen = pygame.display.set_mode((1080, 720))
 
 #Importer une image de fond
 background = pygame.image.load('assets/bg.jpg')
 
+#Importer charger notre bannière
+banner = pygame.image.load('assets/banner.png')
+banner = pygame.transform.scale(banner, (500, 500))
+banner_rect = banner.get_rect()
+banner_rect.x = math.ceil(screen.get_width() / 4)
+
+#importer ou charger notre boutton pour lancer la partie
+play_button = pygame.image.load('assets/button.png')
+play_button = pygame.transform.scale(play_button, (400, 150))
+play_button_rect = play_button.get_rect()
+play_button_rect.x = math.ceil(screen.get_width() / 3.33)
+play_button_rect.y = math.ceil(screen.get_height() / 2)
 #Charger notre jeu
 game = Game()
 
@@ -19,35 +32,18 @@ running = True
 while running:
 
     #appliquer l'arrière plan du jeu
-    screen.blit(background, (0, -330))
+    screen.blit(background, (0, -240))
 
-    #appliquer l'image de mon joueur
-    screen.blit(game.player.image, game.player.rect)
+    #Verifier si notre jeu a commencer ou non
+    if game.is_playing:
+        #Déclancher les instructions de la partie
+        game.update(screen)
+    #Vérifier si notre jeu n'as pas commencer
+    else:
+        #ajouter l'écran de bienvenue
+        screen.blit(play_button, play_button_rect)
+        screen.blit(banner, banner_rect)
 
-    #Actualiser la barre de vie du joueur
-    game.player.update_health_bar(screen)
-
-    #récuperer les projectiles du joueur
-    for projectile in game.player.all_projectiles:
-        projectile.move()
-
-    #récuperer les monstres de notre jeu
-    for monster in game.all_monsters:
-        monster.forward()
-        monster.update_health_bar(screen)
-
-    #appliquer l'ensemble des images de mon groupe de projectile
-    game.player.all_projectiles.draw(screen)
-
-    #appliquer l'ensemble des images de mon groupe de monstre
-    game.all_monsters.draw(screen)
-
-
-    #Verifier les touches droite ou gauche
-    if game.pressed.get(pygame.K_RIGHT) and game.player.rect.x + game.player.rect.width < screen.get_width():
-        game.player.move_right()
-    elif game.pressed.get(pygame.K_LEFT) and game.player.rect.x > 0:
-        game.player.move_left()
 
     #mettre a jour notre écran
     pygame.display.flip()
@@ -68,3 +64,9 @@ while running:
 
         elif event.type == pygame.KEYUP:
             game.pressed[event.key] = False
+
+        elif event.type == pygame.MOUSEBUTTONDOWN:
+            #Vérification pour savoir si la souris est en collision avec le boutton jouer
+            if play_button_rect.collidepoint(event.pos):
+                #mettre le jeu en mode lancer
+                game.start()

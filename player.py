@@ -15,11 +15,14 @@ class Player(pygame.sprite.Sprite):
         self.image = pygame.image.load('assets/player.png')
         self.rect = self.image.get_rect()
         self.rect.x = 400
-        self.rect.y = 385
+        self.rect.y = 460
 
     def damage(self, amount):
         if self.health - amount > amount:
             self.health -= amount
+        else:
+            #si le joueur n'as plus de points de vie
+            self.game.game_over()
 
     def update_health_bar(self, surface):
 
